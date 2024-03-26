@@ -50,23 +50,29 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  void _navigateToLogin() {//เปลี่ยนหน้าLogin
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => LoginPage()),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Bottom Navigation Bar Example'),
-        elevation: 0, // ทำให้ไม่มีเงา
         actions: [
-          IconButton(
-            icon: Icon(Icons.settings),
-            onPressed: () {
-              // ทำงานเมื่อปุ่มถูกคลิก
-              print('Settings button clicked');
-            },
+          TextButton( // เปลี่ยนปุ่มเป็น TextButton
+            onPressed: _navigateToLogin,
+            child: Text(
+              'Login',
+              style: TextStyle(color: Colors.black),
+            ),
           ),
         ],
       ),
-      body: Container( // ใส่ภาพพื้นหลัง
+      body: Container(
+        // ใส่ภาพพื้นหลัง
         decoration: BoxDecoration(
           image: DecorationImage(
             image: AssetImage("assets/BG.jpg"), // ตำแหน่งภาพใน assets
@@ -78,22 +84,23 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Colors.green, // ใส่สี
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: 'หน้าแรก',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.list),
-            label: 'รายการ',
+            icon: Icon(Icons.map),
+            label: 'MAP',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.search),
-            label: 'การค้นหา',
+            label: 'search',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'โปรไฟล์',
+            icon: Icon(Icons.web),
+            label: 'FacebookMFU',
           ),
         ],
         currentIndex: _selectedIndex,
@@ -103,4 +110,16 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
-
+class LoginPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Login'),
+      ),
+      body: Center(
+        child: Text('This is the Login Page'),
+      ),
+    );
+  }
+}
