@@ -30,10 +30,7 @@ class _MyHomePageState extends State<MyHomePage> {
       'หน้าแรก',
       style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
     ),
-    Text(
-      'รายการ',
-      style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
-    ),
+    Image.asset('assets/Map.png', fit: BoxFit.cover), // แผนที่
     Text(
       'การค้นหา',
       style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
@@ -50,7 +47,8 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  void _navigateToLogin() {//เปลี่ยนหน้าLogin
+  void _navigateToLogin() {
+    //เปลี่ยนหน้าLogin
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => LoginPage()),
@@ -62,7 +60,8 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         actions: [
-          TextButton( // เปลี่ยนปุ่มเป็น TextButton
+          TextButton(
+            // เปลี่ยนปุ่มเป็น TextButton
             onPressed: _navigateToLogin,
             child: Text(
               'Login',
@@ -110,6 +109,7 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
+
 class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
