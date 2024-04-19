@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'Login.dart';
 
 void main() {
   runApp(MyApp());
@@ -25,38 +26,73 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _selectedIndex = 0;
 
-  List<Widget> _widgetOptions = <Widget>[
-    Text(
-      'หน้าแรก',
-      style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
-    ),
-    Image.asset('assets/Map.png', fit: BoxFit.cover), // แผนที่
-    Text(
-      'การค้นหา',
-      style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
-    ),
-    Text(
-      'โปรไฟล์',
-      style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
-    ),
-  ];
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
-
-  void _navigateToLogin() {
-    //เปลี่ยนหน้าLogin
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => LoginPage()),
+  void showImagePopup(BuildContext context, String imagePath) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          child: InteractiveViewer(
+            boundaryMargin: EdgeInsets.all(20.0),
+            minScale: 0.1,
+            maxScale: 3.0,
+            child: Image.asset(imagePath, fit: BoxFit.cover),
+          ),
+        );
+      },
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    List<Widget> _widgetOptions = <Widget>[
+      Container(
+        alignment: Alignment.center,
+        child: Text(
+          'หน้าแรก',
+          style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
+        ),
+      ),
+
+      GestureDetector(
+        onTap: () => showImagePopup(context, 'assets/Map.png'),
+        child: Container(
+          alignment: Alignment.topCenter,
+          child: Image.asset('assets/Map.png', fit: BoxFit.cover),
+        ),
+      ), // แผนที่
+
+      Container(
+        alignment: Alignment.center,
+        child: Text(
+          'การค้นหา',
+          style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
+        ),
+      ),
+
+      Container(
+        alignment: Alignment.center,
+        child: Text(
+          'โปรไฟล์',
+          style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
+        ),
+      ),
+    ];
+
+    void _onItemTapped(int index) {
+      //การกระทำต่อปุ่ม
+      setState(() {
+        _selectedIndex = index;
+      });
+    }
+
+    void _navigateToLogin() {
+      //เปลี่ยนหน้าLogin
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => LoginPage()),
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         actions: [
@@ -69,6 +105,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ),
         ],
+        backgroundColor: Colors.green, // ใส่สี
       ),
       body: Container(
         // ใส่ภาพพื้นหลัง
@@ -83,42 +120,34 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.green, // ใส่สี
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: 'หน้าแรก',
+            backgroundColor: Colors.green, // ใส่สี
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.map),
             label: 'MAP',
+            backgroundColor: Colors.green, // ใส่สี
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.search),
             label: 'search',
+            backgroundColor: Colors.green, // ใส่สี
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.web),
             label: 'FacebookMFU',
+            backgroundColor: Colors.green, // ใส่สี
           ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.blue,
+        unselectedLabelStyle: TextStyle(color: Colors.black),
+        selectedLabelStyle: TextStyle(color: Colors.white),
+        unselectedItemColor: Colors.black, // สีของไอคอนที่ไม่ได้ถูกเลือก
+        selectedItemColor: Colors.white, // สีของไอคอนที่ถูกเลือก
         onTap: _onItemTapped,
-      ),
-    );
-  }
-}
-
-class LoginPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Login'),
-      ),
-      body: Center(
-        child: Text('This is the Login Page'),
       ),
     );
   }
