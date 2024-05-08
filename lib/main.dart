@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'Login.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 void main() {
   runApp(MyApp());
@@ -74,16 +75,26 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              'ค้นหา',
-              style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
+            CircleAvatar(
+              backgroundImage: AssetImage('assets/LOGO.png'),
+              radius: 100, // กำหนดรัศมีของวงกลม
             ),
             SizedBox(height: 20),
             TextField(
               decoration: InputDecoration(
                 hintText: 'ค้นหา...',
-                border: OutlineInputBorder(),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10.0), // กำหนดขอบมน
+                  borderSide: BorderSide(
+                      color: Colors.transparent), // ทำให้เส้นขอบมีสีโปร่งใส
+                ),
+                filled: true, // เพิ่มสีในกล่องค้นหา
+                fillColor: Colors.white.withOpacity(0.5), // สีของกล่องค้นหา
+                prefixIcon:
+                    Icon(Icons.search), // เพิ่มไอคอนด้านหน้าของ TextField
               ),
+              // ใส่ controller ถ้าต้องการเก็บค่าข้อมูลที่ผู้ใช้ป้อน
+              // controller: _searchController,
             ),
             SizedBox(height: 20),
             ElevatedButton(
@@ -96,11 +107,23 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
 
-      Container(
-        alignment: Alignment.center,
+      GestureDetector(
+        onTap: () async {
+          const url =
+              'https://www.facebook.com/mfubotanicalgarden/?locale=th_TH'; // ลิงก์ที่คุณต้องการเปิด
+          if (await canLaunch(url)) {
+            await launch(url);
+          } else {
+            throw 'Could not launch $url';
+          }
+        },
         child: Text(
-          'โปรไฟล์',
-          style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
+          'Visit Example.com', // ข้อความที่จะแสดงเป็นลิงก์
+          style: TextStyle(
+            color: Colors.blue, // สีข้อความเป็นสีน้ำเงิน
+            decoration: TextDecoration
+                .underline, // เพิ่มเส้นใต้ข้อความเพื่อแสดงลักษณะเป็นลิงก์
+          ),
         ),
       ),
     ];
@@ -123,7 +146,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         leading: CircleAvatar(
-          backgroundImage: AssetImage('assets/Logo.jpg'),
+          backgroundImage: AssetImage('assets/LOGO.Png'),
         ),
         actions: [
           TextButton(
