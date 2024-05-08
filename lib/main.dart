@@ -26,6 +26,12 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _selectedIndex = 0;
 
+  void _searchFunction() {
+    // ใส่โค้ดสำหรับการค้นหาตามความต้องการ
+    // ตัวอย่างเช่นค้นหาในฐานข้อมูล, เรียก API หรือการจัดการข้อมูลแบบอื่นๆ
+    print('ค้นหา...');
+  }
+
   void showImagePopup(BuildContext context, String imagePath) {
     showDialog(
       context: context,
@@ -62,10 +68,31 @@ class _MyHomePageState extends State<MyHomePage> {
       ), // แผนที่
 
       Container(
+        ////หน้าค้นหา
         alignment: Alignment.center,
-        child: Text(
-          'การค้นหา',
-          style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
+        padding: EdgeInsets.all(20.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              'ค้นหา',
+              style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 20),
+            TextField(
+              decoration: InputDecoration(
+                hintText: 'ค้นหา...',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                _searchFunction();
+              },
+              child: Text('ค้นหา'),
+            ),
+          ],
         ),
       ),
 
@@ -95,6 +122,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
     return Scaffold(
       appBar: AppBar(
+        leading: CircleAvatar(
+          backgroundImage: AssetImage('assets/Logo.jpg'),
+        ),
         actions: [
           TextButton(
             // เปลี่ยนปุ่มเป็น TextButton
