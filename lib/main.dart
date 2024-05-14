@@ -52,21 +52,140 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     List<Widget> _widgetOptions = <Widget>[
-      Container(
+      /*Container(
         alignment: Alignment.center,
         child: Text(
           'หน้าแรก',
           style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
         ),
-      ),
-
-      GestureDetector(
-        onTap: () => showImagePopup(context, 'assets/Map.png'),
-        child: Container(
-          alignment: Alignment.topCenter,
-          child: Image.asset('assets/Map.png', fit: BoxFit.cover),
-        ),
-      ), // แผนที่
+      ),*/
+      // Centered Row of buttons
+      Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          GestureDetector(
+            onTap: () => showImagePopup(context, 'assets/Map.png'),
+            child: Container(
+              alignment: Alignment.topCenter,
+              child: Image.asset('assets/Map.png', fit: BoxFit.cover),
+            ),
+          ),
+          Center(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Column(
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        // Add button functionality here
+                      },
+                      child: Text(
+                        'สวนสมุนไพร\nMedicinal Plant Garden',
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    ElevatedButton(
+                      onPressed: () {
+                        // Add button functionality here
+                      },
+                      child: Text(
+                        'อุทยานไม้ดอก\nForistic Garden',
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    ElevatedButton(
+                      onPressed: () {
+                        // Add button functionality here
+                      },
+                      child: Text(
+                        'ลานวัฒนธรรม\nHome Garden of Ethnic Groups',
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    ElevatedButton(
+                      onPressed: () {
+                        // Add button functionality here
+                      },
+                      child: Text(
+                        'สวนสน\nPine garden',
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    ElevatedButton(
+                      onPressed: () {
+                        // Add button functionality here
+                      },
+                      child: Text(
+                        'สวนวัลยชาติ\nClimber Garden',
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        // Add button functionality here
+                      },
+                      child: Text(
+                        'สวนวิวัฒนาการ\nEvolution Garden',
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    ElevatedButton(
+                      onPressed: () {
+                        // Add button functionality here
+                      },
+                      child: Text(
+                        'สวนพุทธพฤกษ์\nBhuddist Plant Garden',
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    ElevatedButton(
+                      onPressed: () {
+                        // Add button functionality here
+                      },
+                      child: Text(
+                        'สวนพรรณไม้หายาก\nRare Plant Garden',
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    ElevatedButton(
+                      onPressed: () {
+                        // Add button functionality here
+                      },
+                      child: Text(
+                        'สวนเบญจพฤกษ์\nBanana Bamboo Lotus Orchid and Giger Collection',
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    ElevatedButton(
+                      onPressed: () {
+                        // Add button functionality here
+                      },
+                      child: Text(
+                        'สวนซากุระ\nSakura garden',
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ],
+                ),
+                /*Column(
+                  children: [
+                    
+                  ],
+                ),*/
+              ],
+            ),
+          ),
+        ],
+      ),// แผนที่
 
       Container(
         ////หน้าค้นหา
@@ -177,24 +296,22 @@ class _MyHomePageState extends State<MyHomePage> {
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: 'หน้าแรก',
-            backgroundColor: Colors.green, // ใส่สี
           ),
-          BottomNavigationBarItem(
+          /*BottomNavigationBarItem(
             icon: Icon(Icons.map),
             label: 'MAP',
             backgroundColor: Colors.green, // ใส่สี
-          ),
+          ),*/
           BottomNavigationBarItem(
             icon: Icon(Icons.search),
             label: 'search',
-            backgroundColor: Colors.green, // ใส่สี
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.web),
-            label: 'FacebookMFU',
-            backgroundColor: Colors.green, // ใส่สี
+            label: 'FacebookMFU', 
           ),
         ],
+        backgroundColor: Colors.green, // ใส่สี
         currentIndex: _selectedIndex,
         unselectedLabelStyle: TextStyle(color: Colors.black),
         selectedLabelStyle: TextStyle(color: Colors.white),
