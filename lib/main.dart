@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'Login.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'Login.dart';
+import 'Detailpage.dart';
 
 void main() {
   runApp(MyApp());
@@ -27,12 +28,6 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _selectedIndex = 0;
 
-  void _searchFunction() {
-    // ใส่โค้ดสำหรับการค้นหาตามความต้องการ
-    // ตัวอย่างเช่นค้นหาในฐานข้อมูล, เรียก API หรือการจัดการข้อมูลแบบอื่นๆ
-    print('ค้นหา...');
-  }
-
   void showImagePopup(BuildContext context, String imagePath) {
     showDialog(
       context: context,
@@ -49,146 +44,149 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
+  void _searchFunction() {
+    print('ค้นหา...');
+  }
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
+  void _navigateToLogin() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => LoginPage()),
+    );
+  }
+
+  void _navigateToDetailPage(BuildContext context, String title) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => DetailPage(title: title),
+      ),
+    );
+  }
+
+  Widget buildCard(BuildContext context, String text, String title) {
+    return SizedBox(
+      width: 150,
+      height: 100,
+      child: Card(
+        elevation: 2.0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        child: InkWell(
+          onTap: () {
+            _navigateToDetailPage(context, title);
+          },
+          child: Center(
+            child: Text(
+              text,
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     List<Widget> _widgetOptions = <Widget>[
-      /*Container(
-        alignment: Alignment.center,
-        child: Text(
-          'หน้าแรก',
-          style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
-        ),
-      ),*/
-      // Centered Row of buttons
-      Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          GestureDetector(
-            onTap: () => showImagePopup(context, 'assets/Map.png'),
-            child: Container(
+      SingleChildScrollView(
+        child: Column(
+          children: [
+            Container(
               alignment: Alignment.topCenter,
-              child: Image.asset('assets/Map.png', fit: BoxFit.cover),
+              padding: EdgeInsets.all(20.0),
+              child: CircleAvatar(
+                backgroundImage: AssetImage('assets/LOGO.png'),
+                radius: 100,
+              ),
             ),
-          ),
-          Center(
-            child: Row(
+            Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Column(
                   children: [
-                    ElevatedButton(
-                      onPressed: () {
-                        // Add button functionality here
-                      },
-                      child: Text(
-                        'สวนสมุนไพร\nMedicinal Plant Garden',
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
+                    buildCard(context, 'สวนสมุนไพร\nMedicinal Plant Garden', 'สวนสมุนไพร'),
                     SizedBox(height: 10),
-                    ElevatedButton(
-                      onPressed: () {
-                        // Add button functionality here
-                      },
-                      child: Text(
-                        'อุทยานไม้ดอก\nForistic Garden',
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
+                    buildCard(context, 'อุทยานไม้ดอก\nForistic Garden', 'อุทยานไม้ดอก'),
                     SizedBox(height: 10),
-                    ElevatedButton(
-                      onPressed: () {
-                        // Add button functionality here
-                      },
-                      child: Text(
-                        'ลานวัฒนธรรม\nHome Garden of Ethnic Groups',
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
+                    buildCard(context, 'ลานวัฒนธรรม\nHome Garden of Ethnic Groups', 'ลานวัฒนธรรม'),
                     SizedBox(height: 10),
-                    ElevatedButton(
-                      onPressed: () {
-                        // Add button functionality here
-                      },
-                      child: Text(
-                        'สวนสน\nPine garden',
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
+                    buildCard(context, 'สวนสน\nPine garden', 'สวนสน'),
                     SizedBox(height: 10),
-                    ElevatedButton(
-                      onPressed: () {
-                        // Add button functionality here
-                      },
-                      child: Text(
-                        'สวนวัลยชาติ\nClimber Garden',
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    ElevatedButton(
-                      onPressed: () {
-                        // Add button functionality here
-                      },
-                      child: Text(
-                        'สวนวิวัฒนาการ\nEvolution Garden',
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    SizedBox(height: 10),
-                    ElevatedButton(
-                      onPressed: () {
-                        // Add button functionality here
-                      },
-                      child: Text(
-                        'สวนพุทธพฤกษ์\nBhuddist Plant Garden',
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    SizedBox(height: 10),
-                    ElevatedButton(
-                      onPressed: () {
-                        // Add button functionality here
-                      },
-                      child: Text(
-                        'สวนพรรณไม้หายาก\nRare Plant Garden',
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    SizedBox(height: 10),
-                    ElevatedButton(
-                      onPressed: () {
-                        // Add button functionality here
-                      },
-                      child: Text(
-                        'สวนเบญจพฤกษ์\nBanana Bamboo Lotus Orchid and Giger Collection',
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    SizedBox(height: 10),
-                    ElevatedButton(
-                      onPressed: () {
-                        // Add button functionality here
-                      },
-                      child: Text(
-                        'สวนซากุระ\nSakura garden',
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
+                    buildCard(context, 'สวนวัลยชาติ\nClimber Garden', 'สวนวัลยชาติ'),
                   ],
                 ),
-                /*Column(
+                Column(
                   children: [
-                    
+                    buildCard(context, 'สวนวิวัฒนาการ\nEvolution Garden', 'สวนวิวัฒนาการ'),
+                    SizedBox(height: 10),
+                    buildCard(context, 'สวนพุทธพฤกษ์\nBhuddist Plant Garden', 'สวนพุทธพฤกษ์'),
+                    SizedBox(height: 10),
+                    buildCard(context, 'สวนพรรณไม้หายาก\nRare Plant Garden', 'สวนพรรณไม้หายาก'),
+                    SizedBox(height: 10),
+                    buildCard(context, 'สวนเบญจพฤกษ์\nBanana Bamboo Lotus Orchid and Giger Collection', 'สวนเบญจพฤกษ์'),
+                    SizedBox(height: 10),
+                    buildCard(context, 'สวนซากุระ\nSakura garden', 'สวนซากุระ'),
                   ],
-                ),*/
+                ),
               ],
             ),
-          ),
-        ],
-      ),// แผนที่
-
+          ],
+        ),
+      ),
+      SingleChildScrollView(
+        child: Column(
+          children: [
+            GestureDetector(
+              onTap: () => showImagePopup(context, 'assets/Map.png'),
+              child: Container(
+                alignment: Alignment.topCenter,
+                child: Image.asset('assets/Map.png', fit: BoxFit.cover),
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Column(
+                  children: [
+                    buildCard(context, 'สวนสมุนไพร\nMedicinal Plant Garden', 'สวนสมุนไพร'),
+                    SizedBox(height: 10),
+                    buildCard(context, 'อุทยานไม้ดอก\nForistic Garden', 'อุทยานไม้ดอก'),
+                    SizedBox(height: 10),
+                    buildCard(context, 'ลานวัฒนธรรม\nHome Garden of Ethnic Groups', 'ลานวัฒนธรรม'),
+                    SizedBox(height: 10),
+                    buildCard(context, 'สวนสน\nPine garden', 'สวนสน'),
+                    SizedBox(height: 10),
+                    buildCard(context, 'สวนวัลยชาติ\nClimber Garden', 'สวนวัลยชาติ'),
+                  ],
+                ),
+                Column(
+                  children: [
+                    buildCard(context, 'สวนวิวัฒนาการ\nEvolution Garden', 'สวนวิวัฒนาการ'),
+                    SizedBox(height: 10),
+                    buildCard(context, 'สวนพุทธพฤกษ์\nBhuddist Plant Garden', 'สวนพุทธพฤกษ์'),
+                    SizedBox(height: 10),
+                    buildCard(context, 'สวนพรรณไม้หายาก\nRare Plant Garden', 'สวนพรรณไม้หายาก'),
+                    SizedBox(height: 10),
+                    buildCard(context, 'สวนเบญจพฤกษ์\nBanana Bamboo Lotus Orchid and Giger Collection', 'สวนเบญจพฤกษ์'),
+                    SizedBox(height: 10),
+                    buildCard(context, 'สวนซากุระ\nSakura garden', 'สวนซากุระ'),
+                  ],
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
       Container(
-        ////หน้าค้นหา
         alignment: Alignment.center,
         padding: EdgeInsets.all(20.0),
         child: Column(
@@ -196,80 +194,59 @@ class _MyHomePageState extends State<MyHomePage> {
           children: [
             CircleAvatar(
               backgroundImage: AssetImage('assets/LOGO.png'),
-              radius: 100, // กำหนดรัศมีของวงกลม
+              radius: 100,
             ),
             SizedBox(height: 20),
             TextField(
               decoration: InputDecoration(
                 hintText: 'ค้นหา...',
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10.0), // กำหนดขอบมน
-                  borderSide: BorderSide(
-                      color: Colors.transparent), // ทำให้เส้นขอบมีสีโปร่งใส
+                  borderRadius: BorderRadius.circular(10.0),
+                  borderSide: BorderSide(color: Colors.transparent),
                 ),
-                filled: true, // เพิ่มสีในกล่องค้นหา
-                fillColor: Colors.white.withOpacity(0.5), // สีของกล่องค้นหา
-                prefixIcon:
-                    Icon(Icons.search), // เพิ่มไอคอนด้านหน้าของ TextField
+                filled: true,
+                fillColor: Colors.white.withOpacity(0.5),
+                prefixIcon: Icon(Icons.search),
               ),
-              // ใส่ controller ถ้าต้องการเก็บค่าข้อมูลที่ผู้ใช้ป้อน
-              // controller: _searchController,
             ),
             SizedBox(height: 20),
             ElevatedButton(
-              onPressed: () {
-                _searchFunction();
-              },
+              onPressed: _searchFunction,
               child: Text('ค้นหา'),
             ),
           ],
         ),
       ),
-
       GestureDetector(
         onTap: () async {
-          const url =
-              'https://www.facebook.com/mfubotanicalgarden/?locale=th_TH'; // ลิงก์ที่คุณต้องการเปิด
+          const url = 'https://www.example.com';
           if (await canLaunch(url)) {
             await launch(url);
           } else {
             throw 'Could not launch $url';
           }
         },
-        child: Text(
-          'Visit Example.com', // ข้อความที่จะแสดงเป็นลิงก์
-          style: TextStyle(
-            color: Colors.blue, // สีข้อความเป็นสีน้ำเงิน
-            decoration: TextDecoration
-                .underline, // เพิ่มเส้นใต้ข้อความเพื่อแสดงลักษณะเป็นลิงก์
+        child: Container(
+          alignment: Alignment.center,
+          child: Text(
+            'Visit Example.com',
+            style: TextStyle(
+              color: Colors.blue,
+              decoration: TextDecoration.underline,
+            ),
           ),
         ),
       ),
     ];
 
-    void _onItemTapped(int index) {
-      //การกระทำต่อปุ่ม
-      setState(() {
-        _selectedIndex = index;
-      });
-    }
-
-    void _navigateToLogin() {
-      //เปลี่ยนหน้าLogin
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => LoginPage()),
-      );
-    }
-
     return Scaffold(
       appBar: AppBar(
+        title: Text('Bottom Navigation Bar Example'),
         leading: CircleAvatar(
-          backgroundImage: AssetImage('assets/LOGO.Png'),
+          backgroundImage: AssetImage('assets/LOGO.png'),
         ),
         actions: [
           TextButton(
-            // เปลี่ยนปุ่มเป็น TextButton
             onPressed: _navigateToLogin,
             child: Text(
               'Login',
@@ -277,13 +254,12 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ),
         ],
-        backgroundColor: Colors.green, // ใส่สี
+        backgroundColor: Colors.green,
       ),
       body: Container(
-        // ใส่ภาพพื้นหลัง
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage("assets/BG.jpg"), // ตำแหน่งภาพใน assets
+            image: AssetImage("assets/BG.jpg"),
             fit: BoxFit.cover,
           ),
         ),
@@ -296,27 +272,29 @@ class _MyHomePageState extends State<MyHomePage> {
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: 'หน้าแรก',
+            backgroundColor: Colors.green,
           ),
-          /*BottomNavigationBarItem(
+          BottomNavigationBarItem(
             icon: Icon(Icons.map),
             label: 'MAP',
-            backgroundColor: Colors.green, // ใส่สี
-          ),*/
+            backgroundColor: Colors.green,
+          ),
           BottomNavigationBarItem(
             icon: Icon(Icons.search),
             label: 'search',
+            backgroundColor: Colors.green,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.web),
-            label: 'FacebookMFU', 
+            label: 'FacebookMFU',
+            backgroundColor: Colors.green,
           ),
         ],
-        backgroundColor: Colors.green, // ใส่สี
         currentIndex: _selectedIndex,
         unselectedLabelStyle: TextStyle(color: Colors.black),
         selectedLabelStyle: TextStyle(color: Colors.white),
-        unselectedItemColor: Colors.black, // สีของไอคอนที่ไม่ได้ถูกเลือก
-        selectedItemColor: Colors.white, // สีของไอคอนที่ถูกเลือก
+        unselectedItemColor: Colors.black,
+        selectedItemColor: Colors.white,
         onTap: _onItemTapped,
       ),
     );
