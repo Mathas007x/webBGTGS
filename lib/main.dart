@@ -61,16 +61,16 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  void _navigateToDetailPage(BuildContext context, String title) {
+  void _navigateToDetailPage(BuildContext context, String title, String content) {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => DetailPage(title: title),
+        builder: (context) => DetailPage(title: title, content: content),
       ),
     );
   }
 
-  Widget buildCard(BuildContext context, String text, String title) {
+  Widget buildCard(BuildContext context, String text, String title, String content) {
     return SizedBox(
       width: 150,
       height: 100,
@@ -81,7 +81,7 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         child: InkWell(
           onTap: () {
-            _navigateToDetailPage(context, title);
+            _navigateToDetailPage(context, title, content);
           },
           child: Center(
             child: Text(
@@ -113,28 +113,28 @@ class _MyHomePageState extends State<MyHomePage> {
               children: [
                 Column(
                   children: [
-                    buildCard(context, 'สวนสมุนไพร\nMedicinal Plant Garden', 'สวนสมุนไพร'),
+                    buildCard(context, 'สวนสมุนไพร\nMedicinal Plant Garden', 'สวนสมุนไพร', 'รายละเอียดของสวนสมุนไพร'),
                     SizedBox(height: 10),
-                    buildCard(context, 'อุทยานไม้ดอก\nForistic Garden', 'อุทยานไม้ดอก'),
+                    buildCard(context, 'อุทยานไม้ดอก\nForistic Garden', 'อุทยานไม้ดอก', 'รายละเอียดของอุทยานไม้ดอก'),
                     SizedBox(height: 10),
-                    buildCard(context, 'ลานวัฒนธรรม\nHome Garden of Ethnic Groups', 'ลานวัฒนธรรม'),
+                    buildCard(context, 'ลานวัฒนธรรม\nHome Garden of Ethnic Groups', 'ลานวัฒนธรรม', 'รายละเอียดของลานวัฒนธรรม'),
                     SizedBox(height: 10),
-                    buildCard(context, 'สวนสน\nPine garden', 'สวนสน'),
+                    buildCard(context, 'สวนสน\nPine garden', 'สวนสน', 'รายละเอียดของสวนสน'),
                     SizedBox(height: 10),
-                    buildCard(context, 'สวนวัลยชาติ\nClimber Garden', 'สวนวัลยชาติ'),
+                    buildCard(context, 'สวนวัลยชาติ\nClimber Garden', 'สวนวัลยชาติ', 'รายละเอียดของสวนวัลยชาติ'),
                   ],
                 ),
                 Column(
                   children: [
-                    buildCard(context, 'สวนวิวัฒนาการ\nEvolution Garden', 'สวนวิวัฒนาการ'),
+                    buildCard(context, 'สวนวิวัฒนาการ\nEvolution Garden', 'สวนวิวัฒนาการ', 'รายละเอียดของสวนวิวัฒนาการ'),
                     SizedBox(height: 10),
-                    buildCard(context, 'สวนพุทธพฤกษ์\nBhuddist Plant Garden', 'สวนพุทธพฤกษ์'),
+                    buildCard(context, 'สวนพุทธพฤกษ์\nBhuddist Plant Garden', 'สวนพุทธพฤกษ์', 'รายละเอียดของสวนพุทธพฤกษ์'),
                     SizedBox(height: 10),
-                    buildCard(context, 'สวนพรรณไม้หายาก\nRare Plant Garden', 'สวนพรรณไม้หายาก'),
+                    buildCard(context, 'สวนพรรณไม้หายาก\nRare Plant Garden', 'สวนพรรณไม้หายาก', 'รายละเอียดของสวนพรรณไม้หายาก'),
                     SizedBox(height: 10),
-                    buildCard(context, 'สวนเบญจพฤกษ์\nBanana Bamboo Lotus Orchid and Giger Collection', 'สวนเบญจพฤกษ์'),
+                    buildCard(context, 'สวนเบญจพฤกษ์\nBanana Bamboo Lotus Orchid and Giger Collection', 'สวนเบญจพฤกษ์', 'รายละเอียดของสวนเบญจพฤกษ์'),
                     SizedBox(height: 10),
-                    buildCard(context, 'สวนซากุระ\nSakura garden', 'สวนซากุระ'),
+                    buildCard(context, 'สวนซากุระ\nSakura garden', 'สวนซากุระ', 'รายละเอียดของสวนซากุระ'),
                   ],
                 ),
               ],
@@ -157,28 +157,28 @@ class _MyHomePageState extends State<MyHomePage> {
               children: [
                 Column(
                   children: [
-                    buildCard(context, 'สวนสมุนไพร\nMedicinal Plant Garden', 'สวนสมุนไพร'),
+                    buildCard(context, 'สวนสมุนไพร\nMedicinal Plant Garden', 'สวนสมุนไพร', 'รายละเอียดของสวนสมุนไพร'),
                     SizedBox(height: 10),
-                    buildCard(context, 'อุทยานไม้ดอก\nForistic Garden', 'อุทยานไม้ดอก'),
+                    buildCard(context, 'อุทยานไม้ดอก\nForistic Garden', 'อุทยานไม้ดอก', 'รายละเอียดของอุทยานไม้ดอก'),
                     SizedBox(height: 10),
-                    buildCard(context, 'ลานวัฒนธรรม\nHome Garden of Ethnic Groups', 'ลานวัฒนธรรม'),
+                    buildCard(context, 'ลานวัฒนธรรม\nHome Garden of Ethnic Groups', 'ลานวัฒนธรรม', 'รายละเอียดของลานวัฒนธรรม'),
                     SizedBox(height: 10),
-                    buildCard(context, 'สวนสน\nPine garden', 'สวนสน'),
+                    buildCard(context, 'สวนสน\nPine garden', 'สวนสน', 'รายละเอียดของสวนสน'),
                     SizedBox(height: 10),
-                    buildCard(context, 'สวนวัลยชาติ\nClimber Garden', 'สวนวัลยชาติ'),
+                    buildCard(context, 'สวนวัลยชาติ\nClimber Garden', 'สวนวัลยชาติ', 'รายละเอียดของสวนวัลยชาติ'),
                   ],
                 ),
                 Column(
                   children: [
-                    buildCard(context, 'สวนวิวัฒนาการ\nEvolution Garden', 'สวนวิวัฒนาการ'),
+                    buildCard(context, 'สวนวิวัฒนาการ\nEvolution Garden', 'สวนวิวัฒนาการ', 'รายละเอียดของสวนวิวัฒนาการ'),
                     SizedBox(height: 10),
-                    buildCard(context, 'สวนพุทธพฤกษ์\nBhuddist Plant Garden', 'สวนพุทธพฤกษ์'),
+                    buildCard(context, 'สวนพุทธพฤกษ์\nBhuddist Plant Garden', 'สวนพุทธพฤกษ์', 'รายละเอียดของสวนพุทธพฤกษ์'),
                     SizedBox(height: 10),
-                    buildCard(context, 'สวนพรรณไม้หายาก\nRare Plant Garden', 'สวนพรรณไม้หายาก'),
+                    buildCard(context, 'สวนพรรณไม้หายาก\nRare Plant Garden', 'สวนพรรณไม้หายาก', 'รายละเอียดของสวนพรรณไม้หายาก'),
                     SizedBox(height: 10),
-                    buildCard(context, 'สวนเบญจพฤกษ์\nBanana Bamboo Lotus Orchid and Giger Collection', 'สวนเบญจพฤกษ์'),
+                    buildCard(context, 'สวนเบญจพฤกษ์\nBanana Bamboo Lotus Orchid and Giger Collection', 'สวนเบญจพฤกษ์', 'รายละเอียดของสวนเบญจพฤกษ์'),
                     SizedBox(height: 10),
-                    buildCard(context, 'สวนซากุระ\nSakura garden', 'สวนซากุระ'),
+                    buildCard(context, 'สวนซากุระ\nSakura garden', 'สวนซากุระ', 'รายละเอียดของสวนซากุระ'),
                   ],
                 ),
               ],
@@ -300,3 +300,4 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
+
