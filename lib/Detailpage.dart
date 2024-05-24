@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+
 class DetailPage extends StatelessWidget {
   final String title;
   final String content;
@@ -12,35 +13,28 @@ class DetailPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(title),
+        backgroundColor: Colors.green,
       ),
-      body: Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage("assets/BG.jpg"),
-            fit: BoxFit.cover,
-          ),
-        ),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Container(
-                height: 200.0,
-                child: PageView.builder(
-                  itemCount: imagePaths.length,
-                  itemBuilder: (context, index) {
-                    return Image.asset(imagePaths[index], fit: BoxFit.cover);
-                  },
-                ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Container(
+              height: 200.0,
+              child: PageView.builder(
+                itemCount: imagePaths.length,
+                itemBuilder: (context, index) {
+                  return Image.asset(imagePaths[index], fit: BoxFit.cover);
+                },
               ),
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Text(
-                  content,
-                  style: TextStyle(color: Colors.white), // Set the text color to white for better contrast
-                ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Text(
+                content,
+                style: TextStyle(color: Colors.black),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
