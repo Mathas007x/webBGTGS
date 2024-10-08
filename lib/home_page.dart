@@ -1,17 +1,56 @@
 import 'package:flutter/material.dart';
-import 'Detailpage.dart';
+import 'DetailPage.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-class HomePage extends StatelessWidget {
-  void _navigateToDetailPage(BuildContext context, String title, String content, List<String> imagePaths) {
+class HomePage extends StatefulWidget {
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  List<Map<String, dynamic>> gardens = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchGardens();
+  }
+
+  Future<void> _fetchGardens() async {
+    final String baseUrl = dotenv.env['STRAPI_BASE_URL']!;
+    final response = await http.get(Uri.parse('$baseUrl/api/blog'));
+
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      setState(() {
+        gardens = List<Map<String, dynamic>>.from(data['data'].map((item) {
+          final attributes = item['attributes'];
+          return {
+            'title': attributes['title'],
+            'content': attributes['content'],
+            'images': List<String>.from(
+              attributes['images']['data'].map((img) => img['attributes']['url']),
+            ),
+          };
+        }));
+      });
+    } else {
+      print('Failed to load gardens');
+    }
+  }
+
+  void _navigateToDetailPage(BuildContext context, String title, String content, List<String> imageUrls) {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => DetailPage(title: title, content: content, imagePaths: imagePaths),
+        builder: (context) => DetailPage(title: title, content: content, imageUrls: imageUrls),
       ),
     );
   }
 
-  Widget buildCard(BuildContext context, String text, String title, String content, List<String> imagePaths) {
+  Widget buildCard(BuildContext context, String title, String content, List<String> imageUrls) {
     return SizedBox(
       width: 150,
       height: 100,
@@ -22,11 +61,11 @@ class HomePage extends StatelessWidget {
         ),
         child: InkWell(
           onTap: () {
-            _navigateToDetailPage(context, title, content, imagePaths);
+            _navigateToDetailPage(context, title, content, imageUrls);
           },
           child: Center(
             child: Text(
-              text,
+              title,
               textAlign: TextAlign.center,
             ),
           ),
@@ -37,123 +76,41 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          Container(
-            alignment: Alignment.topCenter,
-            padding: EdgeInsets.all(20.0),
-            child: CircleAvatar(
-              backgroundImage: AssetImage('assets/LOGO.png'),
-              radius: 100,
-            ),
-          ),
-          Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+    return gardens.isEmpty
+        ? Center(child: CircularProgressIndicator())
+        : SingleChildScrollView(
+            child: Column(
               children: [
-                Column(
-                  children: [
-                    // ใส่ข้อมูลสวนสมุนไพร
-                    buildCard(
-                      context, 
-                      'สวนสมุนไพร\nMedicinal Plant Garden', 
-                      'สวนสมุนไพร', 
-                      'สวนสมุนไพรเป็นที่รวมสมุนไพรหลากหลายชนิดที่ใช้ในการแพทย์แผนไทย...',
-                      ['assets/medicinal_plant1.jpg', 'assets/medicinal_plant2.jpg']
-                    ),
-                    SizedBox(height: 10),
-                    // ใส่ข้อมูลอุทยานไม้ดอก
-                    buildCard(
-                      context, 
-                      'อุทยานไม้ดอก\nForistic Garden', 
-                      'อุทยานไม้ดอก', 
-                      'อุทยานไม้ดอกประกอบไปด้วยพรรณไม้ดอกหลากสีสัน...',
-                      ['assets/foristic_garden1.jpg', 'assets/foristic_garden2.jpg']
-                    ),
-                    SizedBox(height: 10),
-                    // ใส่ข้อมูลลานวัฒนธรรม
-                    buildCard(
-                      context, 
-                      'ลานวัฒนธรรม\nHome Garden of Ethnic Groups', 
-                      'ลานวัฒนธรรม', 
-                      'ลานวัฒนธรรมแสดงถึงความหลากหลายของชนเผ่า...',
-                      ['assets/ethnic_garden1.jpg', 'assets/ethnic_garden2.jpg']
-                    ),
-                    SizedBox(height: 10),
-                    // ใส่ข้อมูลสวนสน
-                    buildCard(
-                      context, 
-                      'สวนสน\nPine garden', 
-                      'สวนสน', 
-                      'สวนสนมีต้นสนหลายสายพันธุ์ที่เจริญเติบโตในพื้นที่...',
-                      ['assets/pine_garden1.jpg', 'assets/pine_garden2.jpg']
-                    ),
-                    SizedBox(height: 10),
-                    // ใส่ข้อมูลสวนวัลยชาติ
-                    buildCard(
-                      context, 
-                      'สวนวัลยชาติ\nClimber Garden', 
-                      'สวนวัลยชาติ', 
-                      'สวนวัลยชาติประกอบด้วยพรรณไม้เลื้อยหลากหลายชนิด...',
-                      ['assets/climber_garden1.jpg', 'assets/climber_garden2.jpg']
-                    ),
-                  ],
+                Container(
+                  alignment: Alignment.topCenter,
+                  padding: EdgeInsets.all(20.0),
+                  child: CircleAvatar(
+                    backgroundImage: AssetImage('assets/LOGO.png'),
+                    radius: 100,
+                  ),
                 ),
-                Column(
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    // ใส่ข้อมูลสวนวิวัฒนาการ
-                    buildCard(
-                      context, 
-                      'สวนวิวัฒนาการ\nEvolution Garden', 
-                      'สวนวิวัฒนาการ', 
-                      'สวนวิวัฒนาการแสดงถึงการเปลี่ยนแปลงของพรรณไม้...',
-                      ['assets/evolution_garden1.jpg', 'assets/evolution_garden2.jpg']
-                    ),
-                    SizedBox(height: 10),
-                    // ใส่ข้อมูลสวนพุทธพฤกษ์
-                    buildCard(
-                      context, 
-                      'สวนพุทธพฤกษ์\nBhuddist Plant Garden', 
-                      'สวนพุทธพฤกษ์', 
-                      'สวนพุทธพฤกษ์เป็นที่รวมพรรณไม้ที่เกี่ยวข้องกับศาสนาพุทธ...',
-                      ['assets/bhuddist_garden1.jpg', 'assets/bhuddist_garden2.jpg']
-                    ),
-                    SizedBox(height: 10),
-                    // ใส่ข้อมูลสวนพรรณไม้หายาก
-                    buildCard(
-                      context, 
-                      'สวนพรรณไม้หายาก\nRare Plant Garden', 
-                      'สวนพรรณไม้หายาก', 
-                      'สวนพรรณไม้หายากประกอบด้วยพรรณไม้ที่ใกล้สูญพันธุ์...',
-                      ['assets/rare_plant_garden1.jpg', 'assets/rare_plant_garden2.jpg']
-                    ),
-                    SizedBox(height: 10),
-                    // ใส่ข้อมูลสวนเบญจพฤกษ์
-                    buildCard(
-                      context, 
-                      'สวนเบญจพฤกษ์\nBanana Bamboo Lotus Orchid and Giger Collection', 
-                      'สวนเบญจพฤกษ์', 
-                      'สวนเบญจพฤกษ์รวบรวมพรรณไม้ที่สำคัญในวัฒนธรรมไทย...',
-                      ['assets/bananas_collection1.jpg', 'assets/bananas_collection2.jpg']
-                    ),
-                    SizedBox(height: 10),
-                    // ใส่ข้อมูลสวนซากุระ
-                    buildCard(
-                      context, 
-                      'สวนซากุระ\nSakura garden', 
-                      'สวนซากุระ', 
-                      'สวนซากุระมีต้นซากุระที่ผลิดอกในช่วงฤดูใบไม้ผลิ...',
-                      ['assets/sakura_garden1.jpg', 'assets/sakura_garden2.jpg']
+                    Column(
+                      children: gardens.map((garden) {
+                        return Column(
+                          children: [
+                            buildCard(
+                              context,
+                              garden['title'],
+                              garden['content'],
+                              garden['images'],
+                            ),
+                            SizedBox(height: 10),
+                          ],
+                        );
+                      }).toList(),
                     ),
                   ],
                 ),
               ],
             ),
-          ],
-        ),
-      );
-        
-      
-    
+          );
   }
 }
