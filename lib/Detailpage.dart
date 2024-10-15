@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-
 class DetailPage extends StatelessWidget {
   final String title;
   final String content;
@@ -29,9 +28,24 @@ class DetailPage extends StatelessWidget {
             ),
             Padding(
               padding: const EdgeInsets.all(16.0),
-              child: Text(
-                content,
-                style: TextStyle(color: Colors.black),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  IconButton(
+                    icon: Icon(Icons.volume_up),
+                    color: Colors.green,
+                    onPressed: () {
+                      // เพิ่มฟังก์ชันที่คุณต้องการเมื่อกดปุ่มลำโพง
+                      print('Speaker button pressed!');
+                    },
+                  ),
+                  Expanded(
+                    child: Text(
+                      content,
+                      style: TextStyle(color: Colors.black),
+                    ),
+                  ),
+                ],
               ),
             ),
           ],
