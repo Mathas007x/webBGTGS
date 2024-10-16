@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class BottomNavBar extends StatelessWidget {
   final int selectedIndex;
@@ -26,17 +27,32 @@ class BottomNavBar extends StatelessWidget {
           backgroundColor: Colors.green,
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.web),
-          label: 'FacebookMFU',
-          backgroundColor: Colors.green,
-        ),
-      ],
-      currentIndex: selectedIndex,
-      unselectedLabelStyle: TextStyle(color: Colors.black),
-      selectedLabelStyle: TextStyle(color: Colors.white),
-      unselectedItemColor: Colors.black,
-      selectedItemColor: Colors.white,
-      onTap: onItemTapped,
-    );
-  }
+            icon: Icon(Icons.web),
+            label: 'FacebookMFU',
+            backgroundColor: Colors.green,
+          ),
+          ],
+          currentIndex: selectedIndex,
+          unselectedLabelStyle: TextStyle(color: Colors.black),
+          selectedLabelStyle: TextStyle(color: Colors.white),
+          unselectedItemColor: Colors.black,
+          selectedItemColor: Colors.white,
+          onTap: (index) {
+          if (index == 3) {
+            _launchURL();
+          } else {
+            onItemTapped(index);
+          }
+          },
+        );
+        }
+
+        void _launchURL() async {
+        const url = 'https://www.facebook.com/mfubotanicalgarden';
+        if (await canLaunch(url)) {
+          await launch(url);
+        } else {
+          throw 'Could not launch $url';
+        }
+        }
 }
