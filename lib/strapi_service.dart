@@ -5,19 +5,19 @@ class StrapiService {
   final String baseUrl = 'http://localhost:1337';
 
   Future<List<dynamic>> fetchArticles() async {
-    final response = await http.get(Uri.parse('$baseUrl/api/articles'));
+    final response = await http.get(Uri.parse('$baseUrl/api/Blog'));
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
       return data['data'];
     } else {
-      throw Exception('Failed to load articles');
+      throw Exception('Failed to load Blog');
     }
   }
 }
 
 Future<List<Garden>> fetchGardens() async {
-  final response = await http.get(Uri.parse('http://your-strapi-url/api/gardens?populate=*'));
+  final response = await http.get(Uri.parse('http://localhost:1337/api/Blog'));
 
   if (response.statusCode == 200) {
     List<dynamic> data = jsonDecode(response.body)['data'];
@@ -42,5 +42,19 @@ class Garden {
           .map((image) => image['attributes']['url'] as String)
           .toList(),
     );
+  }
+}
+
+void main() async {
+  final strapiService = StrapiService();
+
+  try {
+    final articles = await strapiService.fetchArticles();
+    print('Fetched ${articles.length} articles.');
+
+    final gardens = await fetchGardens();
+    print('Fetched ${gardens.length} gardens.');
+  } catch (e) {
+    print('Error: $e');
   }
 }
