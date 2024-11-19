@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'DetailPage.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'strapi_service.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -10,7 +8,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<Map<String, dynamic>> gardens = [];
+  List<Garden> gardens = [];
+  final StrapiService strapiService = StrapiService();
 
   @override
   void initState() {
@@ -19,38 +18,30 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _fetchGardens() async {
-    final String baseUrl = dotenv.env['STRAPI_BASE_URL']!;
-    final response = await http.get(Uri.parse('$baseUrl/api/blog'));
-
-    if (response.statusCode == 200) {
-      final data = json.decode(response.body);
+    try {
+      final fetchedGardens = await strapiService.fetchGardens();
       setState(() {
-        gardens = List<Map<String, dynamic>>.from(data['data'].map((item) {
-          final attributes = item['attributes'];
-          return {
-            'title': attributes['title'],
-            'content': attributes['content'],
-            'images': List<String>.from(
-              attributes['images']['data'].map((img) => img['attributes']['url']),
-            ),
-          };
-        }));
+        gardens = fetchedGardens;
       });
-    } else {
-      print('Failed to load gardens');
+    } catch (e) {
+      print('Failed to load gardens: $e');
     }
   }
 
-  void _navigateToDetailPage(BuildContext context, String title, String content, List<String> imageUrls) {
+  void _navigateToDetailPage(BuildContext context, Garden garden) {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => DetailPage(title: title, content: content, imageUrls: imageUrls),
+        builder: (context) => DetailPage(
+          title: garden.title,
+          content: garden.description,
+          imageUrls: garden.imageUrls,
+        ),
       ),
     );
   }
 
-  Widget buildCard(BuildContext context, String title, String content, List<String> imageUrls) {
+  Widget buildCard(BuildContext context, Garden garden) {
     return SizedBox(
       width: 150,
       height: 100,
@@ -61,11 +52,11 @@ class _HomePageState extends State<HomePage> {
         ),
         child: InkWell(
           onTap: () {
-            _navigateToDetailPage(context, title, content, imageUrls);
+            _navigateToDetailPage(context, garden);
           },
           child: Center(
             child: Text(
-              title,
+              garden.title,
               textAlign: TextAlign.center,
             ),
           ),
@@ -98,9 +89,7 @@ class _HomePageState extends State<HomePage> {
                           children: [
                             buildCard(
                               context,
-                              garden['title'],
-                              garden['content'],
-                              garden['images'],
+                              garden,
                             ),
                             SizedBox(height: 10),
                           ],
