@@ -17,7 +17,7 @@ class DetailPage extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Container(
+            SizedBox(
               height: 200.0,
               child: PageView.builder(
                 itemCount: imageUrls.length,

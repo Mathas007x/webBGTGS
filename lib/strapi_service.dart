@@ -15,7 +15,7 @@ class StrapiService {
     }
   }
 
-  Future<List<Garden>> fetchGardens() async {
+  /*Future<List<Garden>> fetchGardens() async {
     final response = await http.get(Uri.parse('$baseUrl/api/blogs'));
 
     if (response.statusCode == 200) {
@@ -24,10 +24,32 @@ class StrapiService {
     } else {
       throw Exception('Failed to load gardens');
     }
+  }*/
+  
+  Future<List<Garden>> fetchGardens() async {
+  final response = await http.get(Uri.parse('$baseUrl/api/blogs?populate=*'));
+
+  if (response.statusCode == 200) {
+    final data = jsonDecode(response.body);
+
+    if (data['data'] == null || data['data'] is! List) {
+      throw Exception('Invalid or missing data field');
+    }
+
+    // Log โครงสร้าง JSON ที่สมบูรณ์
+    print('Fetched data: ${data['data']}');
+
+    return (data['data'] as List)
+        .map((item) => Garden.fromJson(item))
+        .toList();
+  } else {
+    throw Exception('Failed to load gardens');
   }
 }
 
-class Garden {
+}
+
+/*class Garden {
   final String title;
   final String description;
   final List<String> imageUrls;
@@ -41,6 +63,49 @@ class Garden {
       imageUrls: (json['attributes']['images']['Gallery'] as List<dynamic>)
           .map((image) => image['attributes']['url'] as String)
           .toList(),
+    );
+  }
+}*/
+
+class Garden {
+  final String title;
+  final String description;
+  final List<String> imageUrls;
+
+  Garden({required this.title, required this.description, required this.imageUrls});
+
+  factory Garden.fromJson(Map<String, dynamic> json) {
+    final attributes = json['attributes'];
+    if (attributes == null || attributes is! Map<String, dynamic>) {
+      throw Exception('Invalid or missing attributes');
+    }
+
+    // ตรวจสอบ Gallery
+    final gallery = attributes['images']?['Gallery'];
+    List<String> parsedImageUrls = [];
+
+    // ตรวจสอบโครงสร้างของ Gallery
+    if (gallery != null && gallery is List) {
+      for (var item in gallery) {
+        if (item is Map<String, dynamic>) {
+          final url = item['attributes']?['url'];
+          if (url != null && url is String) {
+            parsedImageUrls.add(url); // เพิ่ม URL ที่ถูกต้องลงในรายการ
+          } else {
+            print('Skipping invalid item in Gallery: $item');
+          }
+        } else {
+          print('Invalid item in Gallery: $item');
+        }
+      }
+    } else {
+      print('Gallery is null or not a List: $gallery');
+    }
+
+    return Garden(
+      title: attributes['title'] ?? 'No Title',
+      description: attributes['Detail'] ?? 'No Description',
+      imageUrls: parsedImageUrls,
     );
   }
 }

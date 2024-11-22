@@ -45,7 +45,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> _widgetOptions = <Widget>[
+    List<Widget> widgetOptions = <Widget>[
       HomePage(),
       MapPage(),
       SearchPage(),
@@ -63,7 +63,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ),
         child: Center(
-          child: _widgetOptions.elementAt(_selectedIndex),
+          child: widgetOptions.elementAt(_selectedIndex),
         ),
       ),
       bottomNavigationBar: BottomNavBar(
