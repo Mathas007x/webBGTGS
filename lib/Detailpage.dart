@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 
-class DetailPage extends StatefulWidget {
+class DetailPage extends StatelessWidget {
   final String title;
   final String content;
   final List<String> imageUrls;
@@ -12,11 +12,6 @@ class DetailPage extends StatefulWidget {
     required this.imageUrls,
   });
 
-  @override
-  _DetailPageState createState() => _DetailPageState();
-}
-
-class _DetailPageState extends State<DetailPage> {
   final FlutterTts flutterTts = FlutterTts();
 
   Future<void> _speak(String text) async {
@@ -35,7 +30,7 @@ class _DetailPageState extends State<DetailPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text(title),
         backgroundColor: Colors.green,
       ),
       body: SingleChildScrollView(
@@ -45,10 +40,10 @@ class _DetailPageState extends State<DetailPage> {
             SizedBox(
               height: 200.0,
               child: PageView.builder(
-                itemCount: widget.imageUrls.length,
+                itemCount: imageUrls.length,
                 itemBuilder: (context, index) {
                   return Image.network(
-                    widget.imageUrls[index],
+                    imageUrls[index],
                     fit: BoxFit.cover,
                   );
                 },
@@ -64,7 +59,7 @@ class _DetailPageState extends State<DetailPage> {
                     icon: Icon(Icons.volume_up),
                     color: Colors.green,
                     onPressed: () {
-                      _speak(widget.content); // เรียกใช้งาน TTS
+                      _speak(content); // เรียกใช้งาน TTS
                     },
                   ),
                   IconButton(
@@ -76,7 +71,7 @@ class _DetailPageState extends State<DetailPage> {
                   ),
                   Expanded(
                     child: Text(
-                      widget.content,
+                      content,
                       style: TextStyle(color: Colors.black),
                     ),
                   ),

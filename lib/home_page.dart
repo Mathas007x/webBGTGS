@@ -5,18 +5,6 @@ import 'strapi_service.dart';
 class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
-   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.transparent, // โปร่งใสเพื่อให้ BG จาก main.dart แสดง
-      body: Center(
-        child: Text(
-          "Welcome to Home Page",
-          style: TextStyle(fontSize: 24, color: Colors.white), // ข้อความตัวอย่าง
-        ),
-      ),
-    );
-  }
 }
 
 class _HomePageState extends State<HomePage> {
