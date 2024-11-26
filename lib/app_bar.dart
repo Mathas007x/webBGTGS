@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 AppBar buildAppBar(BuildContext context, VoidCallback navigateToLogin) {
   return AppBar(
-    title: Text('Bottom Navigation Bar Example'),
+    title: Text('สวนพฤกษศาสตร์มหาวิทยาลัยแม่ฟ้าหลวง'),
     leading: CircleAvatar(
       backgroundImage: AssetImage('assets/LOGO.png'),
     ),

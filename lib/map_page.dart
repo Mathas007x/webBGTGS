@@ -21,8 +21,8 @@ class MapPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // ขนาดที่แท้จริงของรูปภาพ
-    final double originalMapWidth = 5360.0; // ขนาดจริงของภาพ
-    final double originalMapHeight = 2940.0;
+    const double originalMapWidth = 5360.0; // ขนาดจริงของภาพ
+    const double originalMapHeight = 2940.0;
 
     return LayoutBuilder(
       builder: (context, constraints) {

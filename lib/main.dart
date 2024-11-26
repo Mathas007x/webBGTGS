@@ -11,11 +11,17 @@ void main() {
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Bottom Navigation Bar',
+      debugShowCheckedModeBanner: false,
+      title: 'สวนพฤกษศาสตร์มหาวิทยาลัยแม่ฟ้าหลวง',
       theme: ThemeData(
         primarySwatch: Colors.green,
       ),
@@ -40,12 +46,11 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> _widgetOptions = <Widget>[
-      HomePage(),
-      MapPage(),
-      SearchPage(),
-      ExternalLink(),
-      
+    List<Widget> widgetOptions = <Widget>[
+      HomePage(), // หน้า HomePage
+      MapPage(), // หน้าแผนที่
+      SearchPage(), // หน้า Search
+      ExternalLink(), // ลิงก์ภายนอก
     ];
 
     return Scaffold(
@@ -53,13 +58,11 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage("assets/BG.jpg"),
+            image: AssetImage("assets/BG.jpg"), // พื้นหลังแอปทั้งหมด
             fit: BoxFit.cover,
           ),
         ),
-        child: Center(
-          child: _widgetOptions.elementAt(_selectedIndex),
-        ),
+        child: widgetOptions.elementAt(_selectedIndex), // โหลดหน้าแต่ละหน้าตามที่เลือก
       ),
       bottomNavigationBar: BottomNavBar(
         selectedIndex: _selectedIndex,
