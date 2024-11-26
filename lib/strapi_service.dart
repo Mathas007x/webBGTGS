@@ -15,97 +15,90 @@ class StrapiService {
     }
   }
 
-  /*Future<List<Garden>> fetchGardens() async {
-    final response = await http.get(Uri.parse('$baseUrl/api/blogs'));
+  Future<List<Garden>> fetchGardens() async {
+    final response = await http.get(Uri.parse('$baseUrl/api/blogs?populate=*'));
 
     if (response.statusCode == 200) {
-      List<dynamic> data = jsonDecode(response.body)['data'];
-      return data.map((item) => Garden.fromJson(item)).toList();
+      final data = jsonDecode(response.body);
+      print('Fetched data: ${data['data']}');
+
+      if (data['data'] == null || data['data'] is! List) {
+        throw Exception('Invalid or missing data field');
+      }
+
+      return (data['data'] as List).map((item) {
+        final attributes = item['attributes'];
+        final imageUrls =
+            extractImageUrls(attributes, baseUrl); // ดึง URLs ของรูปภาพ
+        return Garden.fromJson(
+            attributes, imageUrls); // ส่ง imageUrls ไปยัง Garden
+      }).toList();
     } else {
       throw Exception('Failed to load gardens');
     }
-  }*/
-  
-  Future<List<Garden>> fetchGardens() async {
-  final response = await http.get(Uri.parse('$baseUrl/api/blogs?populate=*'));
-
-  if (response.statusCode == 200) {
-    final data = jsonDecode(response.body);
-
-    if (data['data'] == null || data['data'] is! List) {
-      throw Exception('Invalid or missing data field');
-    }
-
-    // Log โครงสร้าง JSON ที่สมบูรณ์
-    print('Fetched data: ${data['data']}');
-
-    return (data['data'] as List)
-        .map((item) => Garden.fromJson(item))
-        .toList();
-  } else {
-    throw Exception('Failed to load gardens');
   }
 }
 
-}
+List<String> extractImageUrls(Map<String, dynamic> json, String baseUrl) {
+  final galleryData = json['Gallery']['data'] as List<dynamic>?;
 
-/*class Garden {
-  final String title;
-  final String description;
-  final List<String> imageUrls;
-
-  Garden({required this.title, required this.description, required this.imageUrls});
-
-  factory Garden.fromJson(Map<String, dynamic> json) {
-    return Garden(
-      title: json['attributes']['title'],
-      description: json['attributes']['Detail'],
-      imageUrls: (json['attributes']['images']['Gallery'] as List<dynamic>)
-          .map((image) => image['attributes']['url'] as String)
-          .toList(),
-    );
+  if (galleryData == null || galleryData.isEmpty) {
+    return []; // Return empty list if no images
   }
-}*/
+
+  return galleryData.map<String>((item) {
+    final attributes = item['attributes'];
+    final formats = attributes['formats'];
+    final url = formats['medium']['url'] ??
+        attributes['url']; // ใช้ medium หรือ url หลัก
+    return '$baseUrl$url'; // เติม baseUrl
+  }).toList();
+}
 
 class Garden {
   final String title;
   final String description;
   final List<String> imageUrls;
 
-  Garden({required this.title, required this.description, required this.imageUrls});
+  Garden({
+    required this.title,
+    required this.description,
+    required this.imageUrls,
+  });
 
-  factory Garden.fromJson(Map<String, dynamic> json) {
-    final attributes = json['attributes'];
-    if (attributes == null || attributes is! Map<String, dynamic>) {
-      throw Exception('Invalid or missing attributes');
+  factory Garden.fromJson(Map<String, dynamic> json, List<String> imageUrls) {
+    if (json == null || json is! Map<String, dynamic>) {
+      throw Exception('Invalid or missing JSON');
     }
 
-    // ตรวจสอบ Gallery
-    final gallery = attributes['images']?['Gallery'];
-    List<String> parsedImageUrls = [];
+    // แปลง Detail เป็นข้อความ
+    final details = json['Detail'];
+    String parsedDescription = '';
 
-    // ตรวจสอบโครงสร้างของ Gallery
-    if (gallery != null && gallery is List) {
-      for (var item in gallery) {
-        if (item is Map<String, dynamic>) {
-          final url = item['attributes']?['url'];
-          if (url != null && url is String) {
-            parsedImageUrls.add(url); // เพิ่ม URL ที่ถูกต้องลงในรายการ
-          } else {
-            print('Skipping invalid item in Gallery: $item');
+    if (details is List) {
+      for (var paragraph in details) {
+        if (paragraph is Map<String, dynamic>) {
+          final children = paragraph['children'];
+          if (children is List) {
+            for (var child in children) {
+              if (child is Map<String, dynamic>) {
+                final text = child['text'];
+                if (text != null && text is String) {
+                  parsedDescription += text + '\n'; // รวมข้อความ
+                }
+              }
+            }
           }
-        } else {
-          print('Invalid item in Gallery: $item');
         }
       }
     } else {
-      print('Gallery is null or not a List: $gallery');
+      print('Detail is not a valid list: $details');
     }
 
     return Garden(
-      title: attributes['title'] ?? 'No Title',
-      description: attributes['Detail'] ?? 'No Description',
-      imageUrls: parsedImageUrls,
+      title: json['title'] ?? 'No Title',
+      description: parsedDescription.trim(),
+      imageUrls: imageUrls, // เพิ่ม URLs รูปภาพที่รับมาจาก fetchGardens
     );
   }
 }
