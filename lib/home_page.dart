@@ -8,31 +8,20 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<Garden> gardens = [];
   final StrapiService strapiService = StrapiService();
-  bool isLoading = true; // Track loading state
-  String? errorMessage; // Track error message
 
   @override
   void initState() {
     super.initState();
-    _fetchGardens();
+
+    // ใช้ addPostFrameCallback เพื่อเรียก API หลังจากที่ Widget ถูกสร้างเสร็จแล้ว
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _fetchGardens();
+    });
   }
 
-  Future<void> _fetchGardens() async {
-    try {
-      final fetchedGardens = await strapiService.fetchGardens();
-      setState(() {
-        gardens = fetchedGardens;
-        isLoading = false;
-        errorMessage = null;
-      });
-    } catch (e) {
-      setState(() {
-        isLoading = false;
-        errorMessage = 'Failed to load gardens. Please try again.';
-      });
-    }
+  Future<List<Garden>> _fetchGardens() async {
+    return await strapiService.fetchGardens();
   }
 
   void _navigateToDetailPage(BuildContext context, Garden garden) {
@@ -62,11 +51,16 @@ class _HomePageState extends State<HomePage> {
             Expanded(
               child: garden.imageUrls.isNotEmpty
                   ? ClipRRect(
-                      borderRadius: BorderRadius.vertical(top: Radius.circular(10.0)),
+                      borderRadius:
+                          BorderRadius.vertical(top: Radius.circular(10.0)),
                       child: Image.network(
                         garden.imageUrls[0],
                         fit: BoxFit.cover,
                         width: double.infinity,
+                        errorBuilder: (context, error, stackTrace) => Icon(
+                          Icons.broken_image,
+                          size: 50,
+                        ),
                       ),
                     )
                   : Container(
@@ -91,66 +85,6 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget buildBody() {
-    if (isLoading) {
-      return Center(child: CircularProgressIndicator());
-    } else if (errorMessage != null) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              errorMessage!,
-              style: TextStyle(fontSize: 16, color: Colors.red),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _fetchGardens,
-              child: Text('Retry'),
-            ),
-          ],
-        ),
-      );
-    } else {
-      double screenWidth = MediaQuery.of(context).size.width;
-      int crossAxisCount = (screenWidth / 200).floor();
-
-      return SingleChildScrollView(
-        child: Column(
-          children: [
-            // LOGO Section
-            Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: CircleAvatar(
-                backgroundImage: AssetImage('assets/LOGO.png'),
-                radius: 100,
-              ),
-            ),
-            // Grid Section
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10.0),
-              child: GridView.builder(
-                physics: NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: crossAxisCount,
-                  crossAxisSpacing: 10,
-                  mainAxisSpacing: 10,
-                  childAspectRatio: 3 / 2,
-                ),
-                itemCount: gardens.length,
-                itemBuilder: (context, index) {
-                  return buildGardenCard(context, gardens[index]);
-                },
-              ),
-            ),
-          ],
-        ),
-      );
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -161,7 +95,73 @@ class _HomePageState extends State<HomePage> {
         centerTitle: true,
       ),
       body: SafeArea(
-        child: buildBody(),
+        child: FutureBuilder<List<Garden>>(
+          future: _fetchGardens(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator()); // Loading state
+            } else if (snapshot.hasError) {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Failed to load gardens. Please try again.',
+                      style: TextStyle(fontSize: 16, color: Colors.red),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 20),
+                    ElevatedButton(
+                      onPressed: () {
+                        setState(() {}); // รีเฟรชหน้าจอเพื่อเรียก API ใหม่
+                      },
+                      child: Text('Retry'),
+                    ),
+                  ],
+                ),
+              );
+            } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+              return Center(child: Text('No gardens found.'));
+            } else {
+              final gardens = snapshot.data!;
+              double screenWidth = MediaQuery.of(context).size.width;
+              int crossAxisCount = (screenWidth / 200).floor();
+
+              return SingleChildScrollView(
+                child: Column(
+                  children: [
+                    // LOGO Section
+                    Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: CircleAvatar(
+                        backgroundImage: AssetImage('assets/LOGO.png'),
+                        radius: 100,
+                      ),
+                    ),
+                    // Grid Section
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                      child: GridView.builder(
+                        physics: NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: crossAxisCount,
+                          crossAxisSpacing: 10,
+                          mainAxisSpacing: 10,
+                          childAspectRatio: 3 / 2,
+                        ),
+                        itemCount: gardens.length,
+                        itemBuilder: (context, index) {
+                          return buildGardenCard(context, gardens[index]);
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            }
+          },
+        ),
       ),
     );
   }

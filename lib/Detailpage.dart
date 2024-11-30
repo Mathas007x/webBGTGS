@@ -6,68 +6,47 @@ class DetailPage extends StatelessWidget {
   final String content;
   final List<String> imageUrls;
 
-  DetailPage({
-    required this.title,
-    required this.content,
-    required this.imageUrls,
-  });
-
   final FlutterTts flutterTts = FlutterTts();
 
+  DetailPage({required this.title, required this.content, required this.imageUrls});
+
   Future<void> _speak(String text) async {
-    await flutterTts.setLanguage("th-TH"); // ตั้งค่าภาษาไทย
-    await flutterTts.setSpeechRate(0.5); // ตั้งค่าความเร็วในการพูด
-    await flutterTts.setVolume(1.0); // ระดับเสียง
-    await flutterTts.setPitch(1.0); // โทนเสียง
-    await flutterTts.speak(text); // เริ่มพูดข้อความ
+    await flutterTts.setLanguage("th-TH");
+    await flutterTts.setSpeechRate(0.5);
+    await flutterTts.speak(text);
   }
 
-  Future<void> _stop() async {
-    await flutterTts.stop(); // หยุดการพูด
-  }
+  Future<void> _stop() async => await flutterTts.stop();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(title),
-        backgroundColor: Colors.green,
-      ),
+      appBar: AppBar(title: Text(title), backgroundColor: Colors.green),
       body: SingleChildScrollView(
         child: Column(
           children: [
-            // แสดงภาพใน PageView
             SizedBox(
               height: 200.0,
               child: PageView.builder(
                 itemCount: imageUrls.length,
                 itemBuilder: (context, index) {
-                  return Image.network(
-                    imageUrls[index],
-                    fit: BoxFit.cover,
-                  );
+                  return Image.network(imageUrls[index], fit: BoxFit.cover);
                 },
               ),
             ),
-            // ปุ่มลำโพงสำหรับ TTS
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   IconButton(
                     icon: Icon(Icons.volume_up),
                     color: Colors.green,
-                    onPressed: () {
-                      _speak(content); // เรียกใช้งาน TTS
-                    },
+                    onPressed: () => _speak(content),
                   ),
                   IconButton(
                     icon: Icon(Icons.stop),
                     color: Colors.red,
-                    onPressed: () {
-                      _stop(); // หยุดการพูด
-                    },
+                    onPressed: _stop,
                   ),
                   Expanded(
                     child: Text(
