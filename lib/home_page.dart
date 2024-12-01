@@ -39,20 +39,20 @@ class _HomePageState extends State<HomePage> {
 
   Widget buildGardenCard(BuildContext context, Garden garden) {
     return Card(
-      elevation: 4.0,
+      elevation: 6.0,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10.0),
+        borderRadius: BorderRadius.circular(15.0),
       ),
       child: InkWell(
         onTap: () => _navigateToDetailPage(context, garden),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // รูปภาพด้านบนของการ์ด
             Expanded(
               child: garden.imageUrls.isNotEmpty
                   ? ClipRRect(
-                      borderRadius:
-                          BorderRadius.vertical(top: Radius.circular(10.0)),
+                      borderRadius: BorderRadius.vertical(top: Radius.circular(15.0)),
                       child: Image.network(
                         garden.imageUrls[0],
                         fit: BoxFit.cover,
@@ -60,6 +60,7 @@ class _HomePageState extends State<HomePage> {
                         errorBuilder: (context, error, stackTrace) => Icon(
                           Icons.broken_image,
                           size: 50,
+                          color: Colors.grey,
                         ),
                       ),
                     )
@@ -68,14 +69,15 @@ class _HomePageState extends State<HomePage> {
                       child: Icon(Icons.image_not_supported, size: 50),
                     ),
             ),
+            // ชื่อของสวนที่อยู่ด้านล่าง
             Padding(
               padding: const EdgeInsets.all(10.0),
               child: Text(
                 garden.title,
-                textAlign: TextAlign.center,
+                textAlign: TextAlign.left,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  fontSize: 16,
+                  fontSize: 18,
                 ),
               ),
             ),
@@ -87,13 +89,11 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    int crossAxisCount = (screenWidth / 200).floor(); // จำนวนคอลัมน์ที่ปรับตามขนาดจอ
+
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        title: const Text('Home', style: TextStyle(color: Colors.black)),
-        centerTitle: true,
-      ),
+      backgroundColor: Colors.transparent, // ทำให้พื้นหลังโปร่งใส
       body: SafeArea(
         child: FutureBuilder<List<Garden>>(
           future: _fetchGardens(),
@@ -124,13 +124,10 @@ class _HomePageState extends State<HomePage> {
               return Center(child: Text('No gardens found.'));
             } else {
               final gardens = snapshot.data!;
-              double screenWidth = MediaQuery.of(context).size.width;
-              int crossAxisCount = (screenWidth / 200).floor();
-
               return SingleChildScrollView(
                 child: Column(
                   children: [
-                    // LOGO Section
+                    // LOGO Section ด้านบน
                     Padding(
                       padding: const EdgeInsets.all(20.0),
                       child: CircleAvatar(
@@ -140,14 +137,14 @@ class _HomePageState extends State<HomePage> {
                     ),
                     // Grid Section
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                      padding: const EdgeInsets.symmetric(horizontal: 15.0),
                       child: GridView.builder(
                         physics: NeverScrollableScrollPhysics(),
                         shrinkWrap: true,
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: crossAxisCount,
-                          crossAxisSpacing: 10,
-                          mainAxisSpacing: 10,
+                          crossAxisSpacing: 15,
+                          mainAxisSpacing: 15,
                           childAspectRatio: 3 / 2,
                         ),
                         itemCount: gardens.length,

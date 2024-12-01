@@ -21,10 +21,6 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'สวนพฤกษศาสตร์มหาวิทยาลัยแม่ฟ้าหลวง',
-      theme: ThemeData(
-        primarySwatch: Colors.green,
-      ),
       home: MyHomePage(),
     );
   }
